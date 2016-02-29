@@ -1,10 +1,7 @@
 Install latest `data.table` devel from source with:
 
 ```r
-install.packages("data.table", repos = c(
-    "https://Rdatatable.github.io/data.table",
-    "https://cran.rstudio.com"
-))
+install.packages("data.table", repos = "https://Rdatatable.github.io/data.table", type = "source")
 ```
 
-CRAN repo is required for `data.table` dependencies, currently the `chron` package.  
+For more information see [Installation wiki](https://github.com/Rdatatable/data.table/wiki/Installation).
