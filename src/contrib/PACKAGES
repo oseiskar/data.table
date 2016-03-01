@@ -6,6 +6,6 @@ Suggests: chron, ggplot2 (>= 0.9.0), plyr, reshape, reshape2, testthat
         (>= 0.4), hexbin, fastmatch, nlme, xts, bit64, gdata,
         GenomicRanges, caret, knitr, curl, zoo, plm
 License: GPL-3 | file LICENSE
-MD5sum: 3138c20dd0cd07bb0e4dbe00daeba868
+MD5sum: d1521cc6582b78b89d642e0a6c38ddb5
 NeedsCompilation: yes
 
