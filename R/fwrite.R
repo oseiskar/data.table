@@ -1,5 +1,6 @@
-fwrite <- function(x, file.path, append = FALSE, quote = TRUE,
-                   sep = ",", eol = "\n", na = "", col.names = TRUE, qmethod = "double",
+fwrite <- function(x, file = "", append = FALSE, quote = TRUE,
+                   sep = ",", eol = "\n", na = "", col.names = TRUE,
+                   qmethod = "double", fileEncoding = "",
                    block.size = 10000) {
   
   # validate arguments
@@ -14,8 +15,22 @@ fwrite <- function(x, file.path, append = FALSE, quote = TRUE,
   stopifnot(length(append) == 1 && class(append) == "logical")
   stopifnot(length(block.size) == 1 && block.size > 0)
   
-  # handle paths like "~/foo/bar"
-  file.path <- path.expand(file.path)
+  # handle file connections, copied from the implementation of write.table
+  if (file == "") 
+    file <- stdout()
+  else if (is.character(file)) {
+    file <- if (nzchar(fileEncoding)) 
+      file(file, ifelse(append, "a", "w"), encoding = fileEncoding)
+    else
+    file(file, ifelse(append, "a", "w"))
+    on.exit(close(file))
+  }
+  else if (!isOpen(file, "w")) {
+    open(file, "w")
+    on.exit(close(file))
+  }
+  if (!inherits(file, "connection")) 
+    stop("'file' must be a character string or connection")
   
   quoted_cols <- rep(quote, ncol(x))
   
@@ -25,8 +40,7 @@ fwrite <- function(x, file.path, append = FALSE, quote = TRUE,
   
   # write header row separately for correct quoting of row names
   if (col.names && !append) {
-    .Call(Cwritefile, as.list(names(x)), file.path, sep, eol, na, quoted_cols, qmethod == "escape", append)
-    append <- TRUE
+    .Call(Cwritefile, as.list(names(x)), file, sep, eol, na, quoted_cols, qmethod == "escape")
   }
   
   # handle empty x
@@ -55,11 +69,10 @@ fwrite <- function(x, file.path, append = FALSE, quote = TRUE,
       column
     })
     
-    .Call(Cwritefile, col_list, file.path, sep, eol, na, quoted_cols, qmethod == "escape", append)
+    .Call(Cwritefile, col_list, file, sep, eol, na, quoted_cols, qmethod == "escape")
     
     if (block_end == nrow(x)) break
     
-    append <- TRUE
     block_begin <- block_end+1
   }
 }

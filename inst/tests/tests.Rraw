@@ -8529,6 +8529,18 @@ local({
 
   # null data table (no columns)
   fwrite_expect_error(1640.24, function(f) {fwrite(data.table(a=1)[NULL,], f)})
+  
+  # writing to a connection
+  f <- tempfile()
+  fconn <- file(f, "w")
+  fwrite(data.table(a=c(1,2), b=c('a', 'b')), fconn)
+  fwrite(data.table(a=c(3,4), b=c('c', 'd')), fconn, append=T)
+  close(fconn)
+  
+  res <- readChar(f, file.info(f)$size)
+  unlink(f)
+  
+  test(1640.25, res, '"a","b"\n1,"a"\n2,"b"\n3,"c"\n4,"d"\n')
 })
 
 ##########################

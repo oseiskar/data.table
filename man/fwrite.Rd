@@ -5,12 +5,12 @@
   Similar to \code{write.table} but faster and more limited in features.
 }
 \usage{
-fwrite(x, file.path, append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "",
-       col.names = TRUE, qmethod = "double", block.size = 10000)
+fwrite(x, file, append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "",
+       col.names = TRUE, qmethod = "double", fileEncoding = "", block.size = 10000)
 }
 \arguments{
   \item{x}{The \code{data.table} or \code{data.frame} to write}
-  \item{file.path}{Output file name}
+  \item{file}{either a character string naming a file or a \code{connection} open for writing. \code{""} indicates output to the console}
   \item{append}{If \code{TRUE}, the file is opened in append mode and column names (header row) are not written.}
   \item{quote}{If \code{TRUE}, all columns of character and factor types, as well as all column names, will be surrounded by double quotes. If \code{FALSE}, nothing is quoted, even if this would break the CSV (the column contents are not checked for separator characters).}
   \item{sep}{The separator between columns}
@@ -18,6 +18,7 @@ fwrite(x, file.path, append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "
   \item{na}{The string to use for missing values in the data}
   \item{col.names}{A logical value indicating if the column names (header row) should be written}
   \item{qmethod}{A character string specifying how to deal with embedded double quote characters when quoting strings. Must be one of "escape", in which case the quote character (as well as the backslash character) is escaped in C style by a backslash, or "double" (default), in which case it is doubled.}
+  \item{fileEncoding}{character string: if non-empty declares the encoding to be used on a file (not a connection) so the character data can be re-encoded as they are written}
   \item{block.size}{The output is written in blocks, each of which contains at most this number of rows. This is to avoid making large copies in memory. Can be used to tweak performance and memory usage.}
 }
 \details{
